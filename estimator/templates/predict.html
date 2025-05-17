@@ -251,68 +251,69 @@
     </nav>
     <!--/ Nav End /-->
 
-    <span> >
 
-    <main class="main-section" style="padding: 20px; background-color: #f9f9f9; border-radius: 8px; margin-top: 200px;">
-    <div style="text-align: center; margin-bottom: 30px;">
-      <h1 style="color: #007bff; font-size: 36px; font-weight: bold; margin-bottom: 10px;">
-        Get Your Dream Home Estimate
-      </h1>
-      <p style="font-size: 20px; color: #555; margin-bottom: 5px;">
-        Why wait for your dream home? Start your journey today!
-      </p>
-      <p style="font-size: 18px; color: #666; margin-bottom: 5px;">
-        Enter the details below to receive an accurate estimate tailored just for you.
-      </p>
-      <p style="font-size: 18px; color: #666;">
-        Powered by our advanced machine learning model for precise predictions.
-      </p>
+
+    <main class="main-section" style="padding: 20px; background-color: #f9f9f9; margin-top: 100px;">
+  <div class="text-center mb-4">
+    <h1 class="text-primary">Get Your Dream Home Estimate</h1>
+    <p>Enter details below to receive a prediction powered by ML.</p>
+  </div>
+
+  <!-- Prediction Form -->
+  <form id="predict-form" method="POST" class="mx-auto" style="max-width: 400px;">
+    {% csrf_token %}
+    <input type="number" name="total_sqft" placeholder="Total Sqft" required class="form-control mb-2" />
+    <input type="number" name="bath" placeholder="Number of Bathrooms" required class="form-control mb-2" />
+    <input type="number" name="bhk" placeholder="Number of BHK" required class="form-control mb-2" />
+    
+    <select name="location" class="form-control mb-3" required>
+      <option value="">Select Location</option>
+      {% for loc in locations %}
+        <option value="{{ loc }}">{{ loc }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-primary w-100">Get Estimate</button>
+    <button type="reset" class="btn btn-outline-secondary w-100 mt-2">Reset</button>
+  </form>
+</main>
+
+<!-- Modal to Show Prediction Result -->
+<div class="modal fade" id="predictionModal" tabindex="-1" aria-labelledby="predictionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Prediction Result</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-message"></div>
     </div>
-      <form method="POST" id="predict-form" class="form-section fade-in" style="display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin: auto;">
-        {% csrf_token %}
-        <input
-          type="number"
-          step="0.1"
-          name="total_sqft"
-          class="form-input"
-          placeholder="Total Sqft"
-          required
-          style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"
-        />
-        <input
-          type="number"
-          name="bath"
-          class="form-input"
-          placeholder="Number of Bathrooms"
-          required
-          style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"
-        />
-        <input
-          type="number"
-          name="bhk"
-          class="form-input"
-          placeholder="Number of BHK"
-          required
-          style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"
-        />
+  </div>
+</div>
 
-        <select name="location" class="form-input" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 20px;">
-          {% for loc in locations %}
-          <option value="{{ loc }}">{{ loc }}</option>
-          {% endfor %}
-        </select>
+<!-- House Loan EMI Calculator -->
+<div class="container mt-5">
+  <h4 class="text-center text-primary mb-3">House Loan EMI Calculator</h4>
+  <div class="card p-4 bg-light shadow-sm">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label>Loan Amount (₹):</label>
+        <input type="number" class="form-control" id="loanAmount" required>
+      </div>
+      <div class="col-md-4">
+        <label>Interest Rate (% per annum):</label>
+        <input type="number" class="form-control" id="interestRate" required>
+      </div>
+      <div class="col-md-4">
+        <label>Tenure (years):</label>
+        <input type="number" class="form-control" id="tenure" required>
+      </div>
+    </div>
+    <button class="btn btn-primary mt-3" onclick="calculateEMI()">Calculate EMI</button>
+    <div id="emiResult" class="mt-3 text-success fw-bold" style="transition: all 0.3s;"></div>
+  </div>
+</div>
 
-        <button type="submit" class="form-btn bounce-in" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">
-            Get Your Dream Home Estimate Now!
-        </button>
-      </form>
-
-      {% if prediction %}
-        <h2 class="result-msg pop-in" style="text-align: center; color: green; margin-top: 20px;">{{ prediction }}</h2>
-      {% elif error %}
-        <h2 class="error-msg pop-in" style="text-align: center; color: red; margin-top: 20px;">{{ error }}</h2>
-      {% endif %}
-    </main>
 
   <section id="services" class="services fade-in" style="padding: 2px; background-color: #ffffff; border-radius: 2px; margin-top: 3px;">
     <h2 style="text-align: center; margin-bottom: 2px;">Our Services</h2>
@@ -512,6 +513,78 @@
 
     <!-- Template Main Javascript File -->
     <script src="{%static 'js/main.js' %}"></script>
+
+<!-- JavaScript -->
+<script>
+function calculateEMI() {
+  const P = parseFloat(document.getElementById("loanAmount").value);
+  const R = parseFloat(document.getElementById("interestRate").value);
+  const N = parseInt(document.getElementById("tenure").value);
+
+  if (!P || !R && R !== 0 || !N) {
+    alert("Please fill all loan fields correctly.");
+    return;
+  }
+
+  const r = R / (12 * 100); // monthly rate
+  const n = N * 12;          // number of months
+
+  let emi, totalPayment, totalInterest;
+
+  if (r === 0) {
+    emi = P / n;
+    totalPayment = P;
+    totalInterest = 0;
+  } else {
+    emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    totalPayment = emi * n;
+    totalInterest = totalPayment - P;
+  }
+
+  document.getElementById("emiResult").innerHTML = `
+    <div class="alert alert-info">
+      <strong>Monthly EMI:</strong> ₹${emi.toFixed(2)}<br>
+      <strong>Total Payment:</strong> ₹${totalPayment.toFixed(2)}<br>
+      <strong>Total Interest:</strong> ₹${totalInterest.toFixed(2)}
+    </div>
+  `;
+}
+
+// AJAX for Prediction
+$(document).ready(function () {
+  $('#predict-form').on('submit', function (e) {
+    e.preventDefault();
+
+    $.ajax({
+      type: 'POST',
+      url: "{% url 'predict' %}",
+      data: $(this).serialize(),
+      success: function (response) {
+        let message = '';
+        if (response.prediction) {
+          const predictedValue = parseFloat(response.prediction.replace(/[^\d.]/g, ''));
+          const priceInRupees = predictedValue * 100000;
+
+          $('#loanAmount').val(priceInRupees.toFixed(0));
+
+          message = `<h4 class="text-success">Estimated Price: ₹${predictedValue.toFixed(2)} Lakhs</h4>`;
+        } else if (response.error) {
+          message = `<h4 class="text-danger">${response.error}</h4>`;
+        } else {
+          message = `<h4 class="text-danger">Unexpected error occurred.</h4>`;
+        }
+
+        $('#modal-message').html(message);
+        $('#predictionModal').modal('show');
+      },
+      error: function () {
+        $('#modal-message').html('<h4 class="text-danger">Server error. Try again later.</h4>');
+        $('#predictionModal').modal('show');
+      }
+    });
+  });
+});
+</script>
   </body>
 </html>
 

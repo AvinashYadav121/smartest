@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm
+from django.http import JsonResponse
 
 
 # Load the model and columns
@@ -57,6 +58,40 @@ def agentsingle(request):
 def agents_grid(request):
     return render(request, 'agents-grid.html')
 
+# @login_required(login_url='/accounts/login/')
+# def predict_price(request):
+#     if request.method == "POST":
+#         try:
+#             total_sqft = float(request.POST.get("total_sqft"))
+#             bath = int(request.POST.get("bath"))
+#             bhk = int(request.POST.get("bhk"))
+#             location = request.POST.get("location").strip().lower()
+
+#             x = np.zeros(len(model_columns))
+#             x[0] = total_sqft
+#             x[1] = bath
+#             x[2] = bhk
+
+#             if location in model_columns:
+#                 loc_index = model_columns.index(location)
+#                 x[loc_index] = 1
+
+#             predicted_price = round(model.predict([x])[0], 2)
+
+#             return render(request, "predict.html", {
+#                 "prediction": f"Estimated Price: ₹ {predicted_price} Lakhs"
+#             })
+#         except Exception as e:
+#             return render(request, "predict.html", {
+#                 "error": f"Error: {str(e)}"
+#             })
+
+#     return render(request, "predict.html", {
+#         "locations": model_columns[3:]  # Skip total_sqft, bath, bhk
+#     })
+
+
+
 @login_required(login_url='/accounts/login/')
 def predict_price(request):
     if request.method == "POST":
@@ -76,32 +111,17 @@ def predict_price(request):
                 x[loc_index] = 1
 
             predicted_price = round(model.predict([x])[0], 2)
+            return JsonResponse({"prediction": f"₹ {predicted_price} Lakhs"})
 
-            return render(request, "predict.html", {
-                "prediction": f"Estimated Price: ₹ {predicted_price} Lakhs"
-            })
         except Exception as e:
-            return render(request, "predict.html", {
-                "error": f"Error: {str(e)}"
-            })
+            return JsonResponse({"error": f"Error: {str(e)}"})
 
+    # If GET request, return page with locations
     return render(request, "predict.html", {
-        "locations": model_columns[3:]  # Skip total_sqft, bath, bhk
+        "locations": model_columns[3:]  # Skip numeric columns
     })
 
-# # Signup view
-# def signup_view(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)
-#             return redirect('home')
-#         else:
-#             messages.error(request, "Signup failed. Please correct the error below.")
-#     else:
-#         form = UserCreationForm()
-#     return render(request, 'signup.html', {'form': form})
+
 
 def register_views(request):
         if request.method == 'POST':
