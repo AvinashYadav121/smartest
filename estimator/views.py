@@ -102,7 +102,10 @@ def register_view(request):
             return redirect('login')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form})
+
+    
+
 
 
 def login_view(request):
@@ -113,7 +116,7 @@ def login_view(request):
             return redirect('home')
     else:
         form = LoginForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'registration/login.html', {'form': form})
 
 def logout_view(request):
     logout(request)

@@ -1,4 +1,4 @@
-{% load static %}
+ {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,17 +20,17 @@
     />
 
     <!-- Bootstrap CSS File -->
-    <link href="{%static 'lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{%static 'lib/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet" />
 
     <!-- Libraries CSS Files -->
-    <link href="{% static 'lib/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'lib/ionicons/css/ionicons.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'lib/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet" />
+    <link href="{% static 'lib/animate/animate.min.css'%}" rel="stylesheet" />
+    <link href="{% static 'lib/ionicons/css/ionicons.min.css'%}" rel="stylesheet" />
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css'%}" rel="stylesheet" />
 
     <!-- Main Stylesheet File -->
-    <link href="{% static 'style.css' %}" rel="stylesheet" />
-    {% comment %} <link rel="stylesheet" href="{% static 'style.css' %}"> {% endcomment %}
+    <link href="{% static 'style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'style.css' %}">
   </head>
 
   <body>
@@ -187,44 +187,39 @@
               <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="{% url 'about' %}">About</a>
+              <a class="nav-link " href="{% url 'about' %}">About</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'predict' %}">Smart_EST</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'property_grid' %}">Property</a>
+              <a class="nav-link active " href="{% url 'property_grid' %}">Property</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'blog_grid' %}">Blog</a>
             </li>
-            {% comment %} <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Pages
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+          </li>
+        {% if user.is_authenticated %}
+          <li class="nav-item d-flex align-items-center">
+            <img src="{{ user.profile_image.url }}" width="35" height="35" class="rounded-circle me-2" alt="Profile">
+            <div class="dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown">
+                {{ user.username }}
               </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{% url 'property_single' %}"
-                  >Property Single</a
-                >
-                <a class="dropdown-item" href="{% url 'blog_single' %}">Blog Single</a>
-                <a class="dropdown-item" href="{% url 'agents_grid' %}">Agents Grid</a>
-                <a class="dropdown-item" href="{% url 'agent_single' %}"
-                  >Agent Single</a
-                > {% endcomment %}
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-            </li>
-          </ul>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+            </div>
+          </li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+        {% endif %}
         </div>
         <button
           type="button"
