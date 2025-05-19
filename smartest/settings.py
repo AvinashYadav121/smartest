@@ -7,16 +7,15 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Secret key from environment
-# SECRET_KEY = config('SECRET_KEY')
-SECRET_KEY = 'django-insecure-v)q!e0%6jgz8zc27e1-6afko-6^)91!#mgu35avu_uft1pxccl'
+SECRET_KEY = config('SECRET_KEY')
 
 # Set to False for production
-# DEBUG = config('DEBUG', default=False, cast=bool)
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
+
 
 # Hosts allowed to access this app
-# ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -60,15 +59,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smartest.wsgi.application'
 
-# # PostgreSQL Database (via dj_database_url)
-# DATABASES = {
-#     'default': dj_database_url.config(default=config('DATABASE_URL'))
-# }
+# PostgreSQL Database (via dj_database_url)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
 }
 
 
@@ -91,9 +84,8 @@ USE_TZ = True
 # Static files (production-ready)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
