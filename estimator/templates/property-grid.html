@@ -150,7 +150,9 @@
     </div>
     <!--/ Form Search End /-->
 
-    <!--/ Nav Star /-->
+ 
+    
+    <!--/ Nav Start /-->
     <nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
       <div class="container">
         <button
@@ -166,9 +168,11 @@
           <span></span>
           <span></span>
         </button>
-        <a class="navbar-brand text-brand" href="{% url 'home' %}"
-          >Smart<span class="color-b">EST</span></a
-        >
+
+        <a class="navbar-brand text-brand" href="{% url 'home' %}">
+          >Smart<span class="color-b">EST</span>
+        </a>
+
         <button
           type="button"
           class="btn btn-link nav-search navbar-toggle-box-collapse d-md-none"
@@ -178,6 +182,7 @@
         >
           <span class="fa fa-search" aria-hidden="true"></span>
         </button>
+
         <div
           class="navbar-collapse collapse justify-content-center"
           id="navbarDefault"
@@ -187,40 +192,71 @@
               <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href="{% url 'about' %}">About</a>
+              <a class="nav-link" href="{% url 'about' %}">About</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'predict' %}">Smart_EST</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active " href="{% url 'property_grid' %}">Property</a>
+              <a class="nav-link active" href="{% url 'property_grid' %}">Property</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'blog_grid' %}">Blog</a>
             </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-          </li>
-        {% if user.is_authenticated %}
-          <li class="nav-item d-flex align-items-center">
-            <img src="{{ user.profile_image.url }}" width="35" height="35" class="rounded-circle me-2" alt="Profile">
-            <div class="dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+            </li>
+
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown d-flex align-items-center">
+              <img
+                src="{{ user.profile_image.url }}"
+                width="35"
+                height="35"
+                class="rounded-circle me-2"
+                alt="Profile"
+              />
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 {{ user.username }}
               </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a class="dropdown-item" href="{% url 'password_change' %}"
+                    >Change Password</a
+                  >
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item text-danger">
+                      Logout
+                    </button>
+                  </form>
+                </li>
               </ul>
-            </div>
-          </li>
-        {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-        {% endif %}
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+            {% endif %}
+          </ul>
         </div>
+
         <button
           type="button"
           class="btn btn-b-n navbar-toggle-box-collapse d-none d-md-block"
@@ -233,7 +269,6 @@
       </div>
     </nav>
     <!--/ Nav End /-->
-
 
   <!--/ Intro Single star /-->
   <section class="intro-single">
