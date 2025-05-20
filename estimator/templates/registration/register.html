@@ -12,7 +12,8 @@
     </form>
     <p class="text-center mt-3">
       <a href="{% url 'password_reset' %}">Forgot Password?</a>
-      <a href="{% url 'registration:login' %}" class="ms-3">Already have an Account?</a>
+      <a href="{% url 'login' %}" class="ms-3">Already have an Account?</a>
+      <a href="{% url 'home' %}" class="ms-3">Home</a>
   </div>
 </div>
 {% endblock %}
